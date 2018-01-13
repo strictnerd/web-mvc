@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/aop 
+                        http://www.springframework.org/schema/aop/spring-aop.xsd
+                        http://www.springframework.org/schema/context 
+                        http://www.springframework.org/schema/context/spring-context.xsd
+                        http://www.springframework.org/schema/tx 
+                        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <context:component-scan base-package="com.dao.**" >
+    	<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	
+
+	<context:annotation-config />
+	
+	 <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:db.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 配置数据源 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="driverClassName" value="${operation.driverClassName}" />
+		<property name="url" value="${operation.url}" />
+		<property name="username" value="${operation.username}" />
+		<property name="password" value="${operation.password}" />
+		<!-- druid 连接池的监控
+		<property name="filters" value="stat" />
+		-->
+		<!--maxActive: 最大连接数量 -->
+		<property name="maxActive" value="${operation.maxActive}" />
+		<!--initialSize: 初始化连接 -->
+		<property name="initialSize" value="${operation.initialSize}" />
+	</bean>
+	<!-- 配置数据源工厂 -->
+	<!-- 配置数据源工厂 -->
+	<bean id="dao" class="org.nutz.dao.impl.NutDao">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+    
+</beans>
